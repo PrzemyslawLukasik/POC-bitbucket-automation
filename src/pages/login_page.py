@@ -78,5 +78,5 @@ class LoginPage(BasePage):
         self.locators.password_input_locator().fill(self.statics.password)
         self.locators.log_in_button_locator().click()
         self.page.wait_for_load_state('load', timeout=10000)
-        time.sleep(10000)
+        time.sleep(10)
 
