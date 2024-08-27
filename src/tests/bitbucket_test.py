@@ -166,19 +166,3 @@ def test_file_upload_via_api(api_client, create_and_delete_repository: Response)
     after_upload_list = repo_api.get_list_of_commits(repo.json()["name"])
 
     assert after_upload_list.json()["values"] is not pre_upload_list.json()["values"]
-
-
-def filter_repository_names(list_of_repositories: Response) -> list[str]:
-    list_of_repository_names = []
-    for item in list_of_repositories.json()["values"]:
-        list_of_repository_names.append(item["name"])
-    return list_of_repository_names
-
-
-@pytest.mark.clean
-def test_remove_repos(api_client) -> None:
-    repo_api: BitBucketClient = api_client
-
-    repos = repo_api.get_repositories()
-    list_r = filter_repository_names(repos)
-    repo_api.remove_list_of_repositories(list_r)
