@@ -1,4 +1,8 @@
+import logging
+
 from playwright.sync_api import Page
+
+page_log = logging.getLogger("PAGE")
 
 
 class BasePage:
@@ -7,4 +11,5 @@ class BasePage:
         self.url = ""
 
     def visit(self) -> None:
+        page_log.info(f"Visiting page: {self.url}")
         self.page.goto(self.url)

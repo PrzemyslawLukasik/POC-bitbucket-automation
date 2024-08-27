@@ -21,8 +21,38 @@ python-dotenv = "^1.0.1"
 pytest-dotenv = "^0.5.2"
 playwright = "^1.46.0"
 pytest-playwright = "^0.5.1"
+pytest-logger = "^1.1.1"
+slugify = "^0.0.1"
+python-slugify = "^8.0.4"
+gitpython = "^3.1.43"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+     \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | docs
+  )/
+
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

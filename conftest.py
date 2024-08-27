@@ -1,17 +1,36 @@
 """This conftest.py module is automatically loaded during framework execution
     It includes mostly pytest framework configuration.
 """
-import os
-import dotenv
 
+import os
+import time
 from datetime import datetime
 from pathlib import Path
 
+import dotenv
 import pytest
-from playwright.sync_api import Playwright
+from playwright.sync_api import Browser, Page, Playwright
+
 from src.helpers.screenshots import Screenshots
+from src.pages.login_page import LoginPage
+from src.pages.top_bar import TopBarPo
 
 dotenv.load_dotenv()
+
+
+LOGGERS = "TEST,PAGE,FIXTURE,API,GENERATOR"
+LOG_LEVEL = "debug"
+
+
+def pytest_logger_config(logger_config):
+    logger_config.add_loggers(
+        ["TEST", "PAGE", "FIXTURE", "API", "GENERATOR"], stdout_level=LOG_LEVEL
+    )
+    logger_config.set_log_option_default(LOGGERS)
+
+
+def pytest_logger_logdirlink(config):
+    return os.path.join(os.path.dirname(__file__), "logs")
 
 
 def pytest_addoption(parser):
@@ -41,9 +60,9 @@ def pytest_runtest_makereport(item):
 
     setattr(item, "rep_" + report.when, report)
     extras = getattr(report, "extras", [])
-    if report.when == "call":
-        if report.failed and "page" in item.funcargs:
-            page = item.funcargs["page"]
+    if report.when == "call" and "admin_page" in item.funcargs:
+        if report.failed and "admin_page" in item.funcargs:
+            page = item.funcargs["admin_page"]
             screenshot_path = item.config.option.screenshot_path
             # screen_file = str(screenshot_path + "/" f"{slugify(item.nodeid)}.png")
             # screen_file = str(screenshot_path + "/" f"{item.name}.png")
@@ -59,7 +78,7 @@ def pytest_runtest_makereport(item):
         xfail = hasattr(report, "wasxfail")
         if (report.skipped and xfail) or (report.failed and not xfail):
             # add the screenshots to the html report
-            page = item.funcargs["page"]
+            page = item.funcargs["admin_page"]
             screenshot_base64 = Screenshots(
                 relative_path=Path(""), page=page
             ).save_screenshot_as_base64()

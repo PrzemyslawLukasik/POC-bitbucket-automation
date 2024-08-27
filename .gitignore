@@ -120,6 +120,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+logs/
+logs
 .env
 .venv
 .venv/
@@ -169,3 +171,4 @@ pytest.ini
 artefacts/
 test-results/*
 .gitlab-ci.yml
+poetry.lock
