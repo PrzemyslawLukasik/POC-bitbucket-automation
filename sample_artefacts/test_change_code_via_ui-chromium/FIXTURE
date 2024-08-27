@@ -1,0 +1,5 @@
+00:00.002 dbg FIXTURE: base_url: https://api.bitbucket.org/2.0/repositories/auto-bucket-pl2
+00:00.003 dbg FIXTURE: auth: <requests.auth.HTTPBasicAuth object at 0x10fec96d0>
+00:08.188 dbg FIXTURE: Repository data: {'full_name': 'Test Repo XJtpisTNvN', 'is_private': False, 'scm': 'git', 'project': {'key': 'TES'}}
+00:11.708 dbg FIXTURE: New repository created:
+<Response [200]>

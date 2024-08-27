@@ -1,0 +1,9 @@
+00:01.085 inf PAGE: Visiting page: https://id.atlassian.com/login?application=bitbucket&continue=https%3A%2F%2Fbitbucket.org%2Faccount%2Fsignin%2F%3Fnext%3D%252F%26redirectCount%3D1
+00:02.101 inf PAGE: Entering credentials
+00:02.103 dbg PAGE: Username: ujm6x.test@inbox.testmail.app
+00:11.925 inf PAGE: Visiting page: https://bitbucket.org/auto-bucket-pl2/workspace/repositories
+00:17.345 inf PAGE: Click on commit button
+00:22.933 dbg PAGE: Readme content: ['README\nThis README would normally document whatever steps are necessary to get your application up and running.\nWhat is this repository for?\n\nQuick summary\nVersion\nLearn Markdown\n\nHow do I get set up?\n\nSummary of set up\nConfiguration\nDependencies\nDatabase configuration\nHow to run tests\nDeployment instructions\n\nContribution guidelines\n\nWriting tests\nCode review\nOther guidelines\n\nWho do I talk to?\n\nRepo owner or admin\nOther community or team contact\n']
+00:25.795 inf PAGE: Click on commit button
+00:29.967 dbg PAGE: article:
+ ['EDITED\nREADME\nThis README would normally document whatever steps are necessary to get your application up and running.\nWhat is this repository for?\n\nQuick summary\nVersion\nLearn Markdown\n\nHow do I get set up?\n\nSummary of set up\nConfiguration\nDependencies\nDatabase configuration\nHow to run tests\nDeployment instructions\n\nContribution guidelines\n\nWriting tests\nCode review\nOther guidelines\n\nWho do I talk to?\n\nRepo owner or admin\nOther community or team contact\n']
