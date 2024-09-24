@@ -20,5 +20,5 @@ def get_latest_commit(repo: Repo):
     return repo.head.commit.tree
 
 
-def remove_repo(repo_dir: str) -> None:
+def remove_repo(repo_dir: Path) -> None:
     shutil.rmtree(repo_dir)
