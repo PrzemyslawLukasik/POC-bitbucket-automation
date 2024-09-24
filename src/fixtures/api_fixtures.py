@@ -14,7 +14,7 @@ fix_log = logging.getLogger("FIXTURE")
 
 
 @pytest.fixture(scope="session", autouse=True)
-def api_client() -> Response:
+def api_client() -> BitBucketClient:
     auth = HTTPBasicAuth(os.environ["API_USER"], os.environ["API_PASS"])
     base_url = os.environ["API_URL"]
     fix_log.debug(f"base_url: {base_url}")

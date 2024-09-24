@@ -1,14 +1,21 @@
 import time
 
 import pytest
-from playwright.sync_api import Browser, BrowserContext, Page, sync_playwright
+from playwright.sync_api import (
+    Browser,
+    BrowserContext,
+    Page,
+    StorageState,
+    sync_playwright,
+)
+from typing_extensions import Generator
 
 from src.pages.login_page import LoginPage
 from src.pages.top_bar import TopBarPo
 
 
 @pytest.fixture(scope="session")
-def admin_storage_state(browser: Browser) -> None:
+def admin_storage_state(browser: Browser) -> Generator[StorageState, None, None]:
     context = browser.new_context()
     page = context.new_page()
     login_page = LoginPage(page)
@@ -23,8 +30,9 @@ def admin_storage_state(browser: Browser) -> None:
 
 # Fixture for the admin page with a new context
 @pytest.fixture(scope="function")
-def admin_page(browser: Browser, admin_storage_state):
+def page(browser: Browser, admin_storage_state):
     context = browser.new_context(storage_state=admin_storage_state)
+    context.tracing.start(screenshots=True, snapshots=True)
     page = context.new_page()
     # Perform your login or setup for an admin user here
     # For example: page.goto("https://example.com/admin")

@@ -9,6 +9,7 @@ from pathlib import Path
 
 import dotenv
 import pytest
+import pytest_playwright
 from playwright.sync_api import Browser, Page, Playwright
 
 from src.helpers.screenshots import Screenshots
@@ -33,6 +34,11 @@ def pytest_logger_logdirlink(config):
     return os.path.join(os.path.dirname(__file__), "logs")
 
 
+@pytest.fixture
+def page(page: Page) -> Page:
+    return page
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--screenshot-path",
@@ -48,6 +54,13 @@ def pytest_addoption(parser):
         default="Build: ",
         help="Path to the screenshots folder",
     )
+    parser.addoption(
+        "--tracing-path",
+        action="store",
+        dest="tracing_path",
+        default="artefacts/tracing",
+        help="Path to store tracing",
+    )
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -55,17 +68,16 @@ def pytest_runtest_makereport(item):
     pytest_html = item.config.pluginmanager.getplugin("html")
     outcome = yield
     screenshot_path = ""
-    # screen_file = ""
     report = outcome.get_result()
 
     setattr(item, "rep_" + report.when, report)
     extras = getattr(report, "extras", [])
-    if report.when == "call" and "admin_page" in item.funcargs:
-        if report.failed and "admin_page" in item.funcargs:
-            page = item.funcargs["admin_page"]
+    if report.when == "call" and "page" in item.funcargs:
+        if report.failed and "page" in item.funcargs:
+            page = item.funcargs["page"]
+            tracing_path = item.config.option.tracing_path + "/" + item.name + ".zip"
+            page.context.tracing.stop(path=tracing_path)
             screenshot_path = item.config.option.screenshot_path
-            # screen_file = str(screenshot_path + "/" f"{slugify(item.nodeid)}.png")
-            # screen_file = str(screenshot_path + "/" f"{item.name}.png")
             if screenshot_path:
                 screenshots = Screenshots(
                     relative_path=Path(screenshot_path), page=page
@@ -78,7 +90,7 @@ def pytest_runtest_makereport(item):
         xfail = hasattr(report, "wasxfail")
         if (report.skipped and xfail) or (report.failed and not xfail):
             # add the screenshots to the html report
-            page = item.funcargs["admin_page"]
+            page = item.funcargs["page"]
             screenshot_base64 = Screenshots(
                 relative_path=Path(""), page=page
             ).save_screenshot_as_base64()

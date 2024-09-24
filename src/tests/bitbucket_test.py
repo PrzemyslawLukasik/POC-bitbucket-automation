@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 from pathlib import Path
 
 import pytest
@@ -14,7 +13,7 @@ from src.fixtures.api_fixtures import (
     get_repositories,
 )
 from src.helpers.bitbucket_api import BitBucketClient
-from src.helpers.generators import generate_new_repo_data_api, generate_new_repo_data_ui
+from src.helpers.generators import generate_new_repo_data_ui
 from src.helpers.git_helper import clone_repository, create_repo_folder, remove_repo
 from src.helpers.requests_filtering import verify_repository_name_in_response
 from src.pages.dashboard.dashboard_page import DashboardPage
@@ -22,26 +21,27 @@ from src.pages.login_page import LoginPage
 from src.pages.repository.repositories_list_page import RepositoriesListPage
 from src.pages.repository.repository_create_form_page import CreateRepositoryPage
 from src.pages.repository.repository_page.repository_page import RepositoryPage
-from src.pages.repository.repository_page.source_po import RepositorySourcePo
 from src.pages.top_bar import TopBarPo
 
 test_log = logging.getLogger("TEST")
 
 
 @pytest.mark.UI
-def test_repository_creation(api_client: Response, admin_page: Page) -> None:
+@pytest.mark.dev
+def test_repository_creation(api_client: BitBucketClient, page: Page) -> None:
     # Pre-condition
-    top_bar = TopBarPo(admin_page)
-    login_page = LoginPage(admin_page)
-    dashboard = DashboardPage(admin_page)
-    create_repo = CreateRepositoryPage(admin_page)
-    repository_list = RepositoriesListPage(admin_page)
+    top_bar = TopBarPo(page)
+    login_page = LoginPage(page)
+    dashboard = DashboardPage(page)
+    create_repo = CreateRepositoryPage(page)
+    repository_list = RepositoriesListPage(page)
     login_page.visit()
 
     # Repository creation
     dashboard.top_bar.click_on_create_button()
     dashboard.top_bar.click_on_repository_create_item()
     new_repository_data = next(generate_new_repo_data_ui())
+    test_log.debug(f"New Repository data:\n {new_repository_data}")
     create_repo.fill_in_repository_creation_form(new_repository_data)
 
     # Verification
@@ -72,12 +72,10 @@ def test_create_a_repo(
 
 @pytest.mark.UI
 # @pytest.mark.dev
-def test_change_code_via_ui(
-    create_and_delete_repository: Response, admin_page: Page
-) -> None:
+def test_change_code_via_ui(create_and_delete_repository: Response, page: Page) -> None:
     # Pre-condition
-    repository_list_page = RepositoriesListPage(admin_page)
-    repository_page = RepositoryPage(admin_page)
+    repository_list_page = RepositoriesListPage(page)
+    repository_page = RepositoryPage(page)
     # Create a repository
     repository = create_and_delete_repository
 
@@ -96,11 +94,11 @@ def test_change_code_via_ui(
 
 @pytest.mark.UI
 def test_submit_code_changes_via_ui(
-    create_and_delete_repository: Response, admin_page: Page
+    create_and_delete_repository: Response, page: Page
 ) -> None:
     # Pre-condition
-    repository_list_page = RepositoriesListPage(admin_page)
-    repository_page = RepositoryPage(admin_page)
+    repository_list_page = RepositoriesListPage(page)
+    repository_page = RepositoryPage(page)
     # Create a repository
     repository = create_and_delete_repository
 

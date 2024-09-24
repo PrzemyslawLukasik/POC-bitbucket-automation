@@ -15,7 +15,7 @@ class FaPopupLocators:
         return self.page.get_by_role("button", name="Continue without two-step")
 
     def dashboard_link_locator(self) -> Locator:
-        self.page.get_by_role("link", name="dashboard")
+        return self.page.get_by_role("link", name="dashboard")
 
 
 class FaPopupPo:
